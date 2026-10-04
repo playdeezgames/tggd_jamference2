@@ -25,6 +25,10 @@ python3 -m http.server -d build/web 8123                     # serve locally (no
 
 Open `http://localhost:8123/?level=N` to jump straight to level N (QA shortcut, wired through the exported `debug_level`).
 
+## Shipping and store assets
+
+`./shippit.sh` tests, builds and zips into `build/roomba-rights-html5.zip` (for a manual itch.io upload), and only runs `butler push` to `thegrumpygamedev/roomba-rights-of-splorr:html` when given `--push`. **Never pass `--push` unless the user explicitly says so**: it publishes the game. Run `./shippit.sh` without `--push` only when asked to. The page slug is an assumption until the user creates the itch.io page. Page copy is `ITCH_DESCRIPTION.md`; `tools/make_cover.py` redraws `assets/cover.png` (630x500); `assets/screenshots/levelN.png` are 800x800 headless-Chrome captures (`google-chrome --headless=new --no-sandbox --window-size=800,800 --virtual-time-budget=4000 --screenshot=out.png "http://localhost:8123/?level=N"`).
+
 ## Code layout (`src/`)
 
 - `game.odin`: pure logic (state, `take_turn`, lives, naps, vacuum stepping). No browser imports, so it builds natively. All state changes happen in `take_turn`.
