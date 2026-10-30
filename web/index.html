@@ -87,6 +87,13 @@
 		const SOUND_FILES = ["step", "vacuum", "settle", "settle2", "nap_done", "caught", "extra_life", "level_clear", "game_over"];
 		const SOUND_GAIN = [0.25, 0.12, 0.3, 0.3, 0.35, 0.4, 0.35, 0.35, 0.4];
 		const SOUND_JITTER = [0.12, 0.05, 0, 0, 0, 0, 0, 0, 0]; // random playbackRate spread so repeats are not identical
+		let muted = false;
+		try { muted = localStorage.getItem("muted") === "1"; } catch (e) {}
+		canvasImports.canvas.is_muted = () => muted;
+		canvasImports.canvas.set_muted = (m) => {
+			muted = !!m;
+			try { localStorage.setItem("muted", muted ? "1" : "0"); } catch (e) {}
+		};
 		let audio = null;
 		const buffers = [];
 		try {
@@ -97,7 +104,7 @@
 			window.addEventListener("keydown", () => { if (audio.state === "suspended") audio.resume(); });
 		} catch (e) { audio = null; }
 		canvasImports.canvas.play_sound = (id) => {
-			if (!audio || audio.state !== "running" || !buffers[id]) return;
+			if (muted || !audio || audio.state !== "running" || !buffers[id]) return;
 			const src = audio.createBufferSource();
 			src.buffer = buffers[id];
 			src.playbackRate.value = 1 + (Math.random() * 2 - 1) * SOUND_JITTER[id];

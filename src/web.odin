@@ -18,6 +18,9 @@ foreign canvas {
 	// tile (col,row) of assets/tileset.png (12px tiles, 1px gap) at world x,y; tint 0 is as drawn, 1 swaps red and blue, 2 brightens; size is the drawn width and height in world units
 	// sound id is a Sound; the page decodes assets/sfx on the first key press
 	play_sound :: proc(id: i32) ---
+	// the mute setting is kept by the page (localStorage); set_muted saves it
+	is_muted :: proc() -> bool ---
+	set_muted :: proc(muted: bool) ---
 	draw_sprite :: proc(col, row: i32, x, y: f32, alpha: f32, tiles: f32, tint: i32, size: f32) ---
 }
 
@@ -54,6 +57,12 @@ on_key :: proc(e: js.Event) {
 	case "w", "W":     dir = {0, 1}
 	case "s", "S":     dir = {0, -1}
 	case " ", "Enter":
+	case "m", "M": // the one key that is not movement: it only toggles the sound
+		js.event_prevent_default()
+		muted := !is_muted()
+		set_muted(muted)
+		if game.state == .Playing { game.message = "Sound off" if muted else "Sound on" }
+		return
 	case: return
 	}
 	js.event_prevent_default()
@@ -207,6 +216,7 @@ step :: proc(dt: f64, c: runtime.Context) -> bool {
 			"The robot vacuum is coming.",
 			"",
 			"Arrows or WASD: move",
+			"M: sound on/off",
 			"Bump a wall to stay put.",
 			"Stay put on a spot to nap.",
 			"The vacuum moves 2 per turn.",

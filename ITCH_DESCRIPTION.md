@@ -1,3 +1,11 @@
+Page: https://thegrumpygamedev.itch.io/roomba-rights-of-splorr  
+Jam: https://itch.io/jam/jamference-ai-game-jam-hack-1  
+This file is pasted in by hand; nothing here is published by the repo.
+
+**Short description**
+
+A cat tries to nap while a robot vacuum follows a route you can't see. Turn based. Arrow keys or WASD.
+
 **Roomba Rights of SPLORR!!**
 
 *A metaphor about trying to nap. In SPLORR!!*
@@ -10,7 +18,7 @@ You can't see where the vacuum is going. You can only watch it, and it moves two
 
 **How to play**
 
-- **Arrow keys or WASD** to move. That's the only input.
+- **Arrow keys or WASD** to move. That's the only game input. **M** turns the sound on and off.
 - The game is **turn based**. Nothing happens until you move, and then the vacuum moves.
 - **Bumping a wall** keeps you where you are and uses your turn. It's the only way to wait.
 - Walk onto a **nap spot** (sofa, basket or keyboard) and bump a wall three times in a row to finish a nap. Every spot sits against a wall.
@@ -25,7 +33,7 @@ Theme: Cat and Robot. Restriction: Movement Input Only.
 
 **AI use**
 
-Built with Claude Code (Claude Sonnet 5.5). The AI wrote all the game code (Odin, compiled to WebAssembly), the web wrapper, the build setup, the five level layouts the cover image generator and the sound effects (written as short PLAY-text melodies in the Anvil of SPLORR!!, an asset tool made with the same AI). It also wrote the tests, including a solver that checks every level can be cleared without being caught.
+Built with Claude Code (Claude Sonnet 5.5). The AI wrote all the game code (Odin, compiled to WebAssembly), the web wrapper, the build setup, the five level layouts, the cover image generator and the sound effects (written as short PLAY-text melodies in the Anvil of SPLORR!!, an asset tool made with the same AI). It also wrote the tests, including a solver that checks every level can be cleared without being caught.
 
 I was the product owner: I chose the concept, made the design decisions together with the AI (the 2-tile vacuum, the hidden route, the lives and levels, the look of each house) and playtested every build as QA. I wrote no code.
 
