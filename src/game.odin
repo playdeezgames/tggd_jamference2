@@ -23,6 +23,11 @@ State :: enum {
 	Dead, // no lives left
 }
 
+// Sound effects, in the order of SOUND_FILES in web/index.html.
+Sound :: enum { Step, Vacuum, Settle, Settle2, NapDone, Caught, ExtraLife, LevelClear, GameOver }
+
+MAX_SOUNDS :: 16
+
 SpotKind :: enum { Sofa, Basket, Keyboard }
 
 Spot :: struct {
@@ -52,9 +57,19 @@ Game :: struct {
 	anim_time:    f64, // seconds since the last vacuum tile (or the cat's move)
 	queue:        [MAX_QUEUED]Tile, // presses made while the vacuum moves, acted on in order
 	queued:       int,
+	sounds:       [MAX_SOUNDS]Sound, // sounds to play, drained by the web layer once a frame
+	sound_count:  int,
 }
 
 game: Game
+
+// Queues a sound for the web layer; dropped when the queue is full (tests never drain it).
+play :: proc(s: Sound) {
+	if game.sound_count < MAX_SOUNDS {
+		game.sounds[game.sound_count] = s
+		game.sound_count += 1
+	}
+}
 
 reset_game :: proc() {
 	intro := game.state == .Intro // main() starts on the intro screen; restarts skip it
@@ -175,11 +190,15 @@ player_move :: proc(dir: Tile) {
 	game.caught = false
 	target := game.pos + dir
 	stayed := game.solid[target.y][target.x]
-	if !stayed { game.pos = target }
+	if !stayed {
+		game.pos = target
+		play(.Step)
+	}
 
 	if stayed {
 		if i := open_spot_at(game.pos); i >= 0 {
 			game.nap_progress += 1
+			if game.nap_progress == 1 { play(.Settle) } else if game.nap_progress == 2 { play(.Settle2) }
 			if game.nap_progress >= NAP_TURNS {
 				finish_nap(i)
 				if all_napped() {
@@ -204,7 +223,7 @@ player_move :: proc(dir: Tile) {
 vacuum_step :: proc() {
 	game.vac = (game.vac + 1) % game.route_len
 	game.pending_vac -= 1
-	if game.pos == vacuum_pos() { get_caught() }
+	if game.pos == vacuum_pos() { get_caught() } else { play(.Vacuum) }
 }
 
 finish_nap :: proc(i: int) {
@@ -212,9 +231,11 @@ finish_nap :: proc(i: int) {
 	game.nap_progress = 0
 	game.naps += 1
 	game.message = "A good nap. The house is quiet."
+	play(.NapDone)
 	if game.naps % NAPS_PER_LIFE == 0 && game.lives < MAX_LIVES {
 		game.lives += 1
 		game.message = "Extra life! Well rested."
+		play(.ExtraLife)
 	}
 }
 
@@ -230,6 +251,8 @@ next_level :: proc() {
 	game.level_idx = (game.level_idx + 1) % len(LEVELS)
 	load_level()
 	game.message = "House napped. On to the next."
+	game.sound_count = 0 // the fanfare replaces the nap chime
+	play(.LevelClear)
 }
 
 get_caught :: proc() {
@@ -240,8 +263,11 @@ get_caught :: proc() {
 	game.nap_progress = 0
 	game.pos = game.start
 	game.message = "The vacuum got you!"
+	game.sound_count = 0 // the catch drowns out the step or nap sound of the same turn
+	play(.Caught)
 	if game.lives <= 0 {
 		game.lives = 0
 		game.state = .Dead
+		play(.GameOver)
 	}
 }

@@ -287,3 +287,33 @@ catch_mid_animation_stops_vacuum_and_clears_queue :: proc(t: ^testing.T) {
 	testing.expect_value(t, game.queued, 0)
 	testing.expect_value(t, game.vac, 1) // it did not go on to its second tile
 }
+
+@(test)
+sounds_follow_events :: proc(t: ^testing.T) {
+	// a step on open floor queues a step, then one vacuum sound per tile it moves
+	fresh()
+	game.pos = {1, 1}
+	game.solid[1][2] = false
+	game.vac = 0
+	game.sound_count = 0
+	player_move({1, 0})
+	testing.expect_value(t, game.sound_count, 1)
+	testing.expect_value(t, game.sounds[0], Sound.Step)
+	for game.pending_vac > 0 { vacuum_step() }
+	testing.expect_value(t, game.sounds[game.sound_count - 1], Sound.Vacuum)
+
+	// being caught replaces everything else queued that turn
+	fresh()
+	game.sound_count = 0
+	play(.Step)
+	get_caught()
+	testing.expect_value(t, game.sound_count, 1)
+	testing.expect_value(t, game.sounds[0], Sound.Caught)
+
+	// the last life adds the game-over sound
+	fresh()
+	game.lives = 1
+	game.sound_count = 0
+	get_caught()
+	testing.expect_value(t, game.sounds[game.sound_count - 1], Sound.GameOver)
+}

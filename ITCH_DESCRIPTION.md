@@ -25,13 +25,14 @@ Theme: Cat and Robot. Restriction: Movement Input Only.
 
 **AI use**
 
-Built with Claude Code (Claude Sonnet 5.5). The AI wrote all the game code (Odin, compiled to WebAssembly), the web wrapper, the build setup, the five level layouts and the cover image generator. It also wrote the tests, including a solver that checks every level can be cleared without being caught.
+Built with Claude Code (Claude Sonnet 5.5). The AI wrote all the game code (Odin, compiled to WebAssembly), the web wrapper, the build setup, the five level layouts the cover image generator and the sound effects (written as short PLAY-text melodies in the Anvil of SPLORR!!, an asset tool made with the same AI). It also wrote the tests, including a solver that checks every level can be cleared without being caught.
 
 I was the product owner: I chose the concept, made the design decisions together with the AI (the 2-tile vacuum, the hidden route, the lives and levels, the look of each house) and playtested every build as QA. I wrote no code.
 
 **Credits**
 
 - Art: [Urizen 1-bit tileset](https://vurmux.itch.io/urizen-onebit-tileset) by vurmux (CC0)
+- Sound effects: made in the Anvil of SPLORR!! (`assets/sfx`)
 - Code: Odin (`js_wasm32`), HTML5 canvas
 - Team: solo developer plus AI
 

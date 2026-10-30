@@ -16,6 +16,8 @@ foreign canvas {
 	clear_canvas :: proc(r, g, b: f32) ---
 	fill_rect :: proc(x, y, w, h: f32, r, g, b, a: f32, tiles: f32) ---
 	// tile (col,row) of assets/tileset.png (12px tiles, 1px gap) at world x,y; tint 0 is as drawn, 1 swaps red and blue, 2 brightens; size is the drawn width and height in world units
+	// sound id is a Sound; the page decodes assets/sfx on the first key press
+	play_sound :: proc(id: i32) ---
 	draw_sprite :: proc(col, row: i32, x, y: f32, alpha: f32, tiles: f32, tint: i32, size: f32) ---
 }
 
@@ -153,6 +155,8 @@ draw_panel :: proc(lines: []string) {
 step :: proc(dt: f64, c: runtime.Context) -> bool {
 	context = ctx
 	tick(dt)
+	for s in game.sounds[:game.sound_count] { play_sound(i32(s)) }
+	game.sound_count = 0
 
 	clear_canvas(0.08, 0.08, 0.12)
 	look := LEVELS[game.level_idx]

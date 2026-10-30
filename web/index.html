@@ -82,6 +82,30 @@
 			g.drawImage(src, col * 13 + 1, row * 13 + 1, 12, 12, x * k, cv.height - (y + size) * k, k * size, k * size);
 			g.globalAlpha = 1;
 		};
+		// Sound effects (Anvil, assets/sfx), in the order of the Odin Sound enum. The AudioContext
+		// stays suspended until the first key press, which is also the game's only input.
+		const SOUND_FILES = ["step", "vacuum", "settle", "settle2", "nap_done", "caught", "extra_life", "level_clear", "game_over"];
+		const SOUND_GAIN = [0.25, 0.12, 0.3, 0.3, 0.35, 0.4, 0.35, 0.35, 0.4];
+		const SOUND_JITTER = [0.12, 0.05, 0, 0, 0, 0, 0, 0, 0]; // random playbackRate spread so repeats are not identical
+		let audio = null;
+		const buffers = [];
+		try {
+			audio = new (window.AudioContext || window.webkitAudioContext)();
+			SOUND_FILES.forEach((name, i) => {
+				fetch("sfx/" + name + ".wav").then(r => r.arrayBuffer()).then(b => audio.decodeAudioData(b)).then(d => { buffers[i] = d; }).catch(() => {});
+			});
+			window.addEventListener("keydown", () => { if (audio.state === "suspended") audio.resume(); });
+		} catch (e) { audio = null; }
+		canvasImports.canvas.play_sound = (id) => {
+			if (!audio || audio.state !== "running" || !buffers[id]) return;
+			const src = audio.createBufferSource();
+			src.buffer = buffers[id];
+			src.playbackRate.value = 1 + (Math.random() * 2 - 1) * SOUND_JITTER[id];
+			const gain = audio.createGain();
+			gain.gain.value = SOUND_GAIN[id];
+			src.connect(gain).connect(audio.destination);
+			src.start();
+		};
 		const rgb = (r, g, b, a = 1) => `rgba(${r * 255 | 0},${g * 255 | 0},${b * 255 | 0},${a})`;
 		const memory = new odin.WasmMemoryInterface();
 		odin.runWasm("game.wasm", document.getElementById("log"), canvasImports, memory);
