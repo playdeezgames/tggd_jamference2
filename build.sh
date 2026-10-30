@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 ODIN=${ODIN:-odin}
 OUT=build/web
 mkdir -p "$OUT"
-"$ODIN" build src -target:js_wasm32 -out:"$OUT/game.wasm" -o:speed "$@"
+"$ODIN" build src -target:js_wasm32 -out:"$OUT/game.wasm" -o:"${OPT:-speed}" "$@"
 cp web/index.html "$OUT/"
 cp "$("$ODIN" root)/core/sys/wasm/js/odin.js" "$OUT/"
 cp assets/tileset.png "$OUT/"

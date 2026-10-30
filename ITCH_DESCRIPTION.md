@@ -2,6 +2,8 @@
 
 *A metaphor about trying to nap. In SPLORR!!*
 
+Latest version: https://playdeezgames.github.io/tggd_jamference2/
+
 You are a cat. The house has places to nap. The house also has a robot vacuum.
 
 You can't see where the vacuum is going. You can only watch it, and it moves two tiles for every one of yours.
