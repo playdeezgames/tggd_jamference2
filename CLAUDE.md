@@ -27,7 +27,7 @@ Open `http://localhost:8123/?level=N` to jump straight to level N (QA shortcut, 
 
 ## Shipping and store assets
 
-`./shippit.sh` (a wrapper for `tools/ship.sh`) tests, builds (`OPT=size`) and zips into `build/roomba-rights-html5.zip` (for a manual itch.io upload), and only runs `butler push` to `thegrumpygamedev/roomba-rights-of-splorr:html` when given `--push`. **Never pass `--push` unless the user explicitly says so**: it publishes the game. Run `./shippit.sh` without `--push` only when asked to. The itch.io page exists. Page copy is `ITCH_DESCRIPTION.md`; `tools/make_cover.py` redraws `assets/cover.png` (630x500); `assets/screenshots/levelN.png` are 800x800 headless-Chrome captures (`google-chrome --headless=new --no-sandbox --window-size=800,800 --virtual-time-budget=4000 --screenshot=out.png "http://localhost:8123/?level=N"`).
+`./shippit.sh` (a wrapper for `tools/ship.sh`) tests, builds (`OPT=size`) and zips into `build/roomba-rights-html5.zip` (for a manual itch.io upload), and only runs `butler push` to `thegrumpygamedev/roomba-rights-of-splorr:html` when given `--push`. **Never pass `--push` unless the user explicitly says so**: it publishes the game. Run `./shippit.sh` without `--push` only when asked to. The itch.io page exists. Page copy is `ITCH_DESCRIPTION.md`; `tools/make_cover.py` redraws `assets/cover.png` (630x500); `assets/screenshots/0N-levelN.png` are 800x800 headless-Chrome captures (`google-chrome --headless=new --no-sandbox --window-size=800,800 --virtual-time-budget=4000 --screenshot=out.png "http://localhost:8123/?level=N"`).
 
 ## Code layout (`src/`)
 
