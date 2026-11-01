@@ -5,13 +5,19 @@
 	<title>Roomba Rights of SPLORR!!</title>
 	<style>
 		html, body { margin: 0; height: 100%; background: #111; }
-		body { display: flex; align-items: center; justify-content: center; }
-		canvas { width: min(100vw, 100vh); height: min(100vw, 100vh); background: #000; }
+		body { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; font: 12px/1.4 monospace; }
+		canvas { width: min(100vw, calc(100vh - 44px)); height: min(100vw, calc(100vh - 44px)); background: #000; display: block; }
+		footer { margin-top: 6px; height: 38px; overflow: hidden; text-align: center; max-width: 95vw; }
+		footer a { color: #aaa; }
 		#log { position: fixed; left: 0; bottom: 0; margin: 0; color: #aaa; font: 12px monospace; }
 	</style>
 </head>
 <body>
 	<canvas id="canvas" width="800" height="800"></canvas>
+	<footer>
+		Roomba Rights of SPLORR!! by TheGrumpyGameDev. Art: Urizen 1-bit tileset by vurmux (CC0). Made by an AI agent (Claude Code) at the author's direction; sounds from the Anvil of SPLORR!!.
+		<a href="https://thegrumpygamedev.itch.io/">itch.io</a> · <a href="https://playdeezgames.github.io/oeuvre-of-splorr/">more games</a>
+	</footer>
 	<pre id="log"></pre>
 	<script src="odin.js"></script>
 	<script>
